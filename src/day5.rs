@@ -1,0 +1,104 @@
+use rayon::prelude::*;
+use nom::bytes::complete::{tag, take_until};
+use nom::character::complete::{alpha1, multispace1, newline, space1};
+use nom::error::Error;
+use nom::{IResult};
+use nom::multi::separated_list1;
+use nom::sequence::{separated_pair, terminated, tuple};
+
+pub fn run(data: String) {
+    println!("Part 1 : {:?}", part1(&data));
+    println!("Part 2 : {:?}", part2(&data));
+}
+
+#[derive(Debug)]
+struct Data {
+    start_source: u64,
+    start_destination: u64,
+    range:u64
+}
+
+#[derive(Debug)]
+struct Map<'a> {
+    source: &'a str,
+    destination: &'a str,
+    data: Vec<Data>
+}
+
+impl Map<'_> {
+    fn find_dest_number(&self, src: u64) -> u64 {
+        let x = self.data.iter().filter(|d| {
+            src >= d.start_source && src < (d.start_source + d.range)
+        }).map(|d| d.start_destination + (src - d.start_source)).collect::<Vec<u64>>();
+        *x.first().unwrap_or(&src)
+    }
+}
+
+fn process_data(input: &str) -> IResult<&str, Data> {
+    let (input, numbers) : (&str, Vec<u64>) = separated_list1(space1::<&str, Error<&str>>, nom::character::complete::u64)(input).unwrap();
+    Ok((input,Data {
+        start_destination: *numbers.get(0).unwrap(),
+        start_source: *numbers.get(1).unwrap(),
+        range: *numbers.get(2).unwrap()
+    }))
+}
+
+fn process_map(input: &str) -> IResult<&str, Map> {
+    let (input, source) : (&str, &str) = alpha1::<&str, Error<&str>>(input).unwrap();
+    let (input, _) = tag::<&str, &str, Error<&str>>("-to-")(input).unwrap();
+    let (input, destination) = terminated(alpha1::<&str, Error<&str>>, tuple((space1, tag("map:"), newline)))(input).unwrap();
+    let res = take_until::<&str, &str, Error<&str>>("\n\n")(&input);
+
+    if let Ok ((input , numbers)) = res {
+        let (_, data) = separated_list1(newline, process_data)(numbers).unwrap();
+        Ok((input, Map {
+            source,
+            destination,
+            data,
+        }))
+    } else {
+        let (_, data) = separated_list1(newline, process_data)(input).unwrap();
+        Ok((input, Map {
+            source,
+            destination,
+            data,
+        }))
+    }
+
+
+}
+
+fn process_maps(input: &str) -> IResult<&str, Vec<Map>> {
+    let (input, maps) : (&str, Vec<Map>) = separated_list1(multispace1, process_map)(input).unwrap();
+    Ok ((input, maps))
+}
+
+
+fn seed_locations(seed: u64, maps: &Vec<Map>) -> u64 {
+    let mut number = seed;
+    for m in maps {
+        number = m.find_dest_number(number);
+    };
+    number
+}
+
+fn reverse_seed_locations(map: Map, seeds: Vec<u64>) -> Vec<u64> {
+    seeds.into_iter().map(|x| map.find_dest_number(x)).collect()
+}
+
+fn part1(data: &String) -> u64 {
+    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data.as_str()).unwrap();
+    let (input, seeds) : (&str, Vec<u64>) = separated_list1(space1::<&str, Error<&str>>, nom::character::complete::u64)(input).unwrap();
+    let (input, _) = multispace1::<&str, Error<&str>>(input).unwrap();
+    let (_, maps) = process_maps(input).unwrap();
+    seeds.into_iter().map(|x| seed_locations(x, &maps)).collect::<Vec<u64>>().into_iter().min().unwrap()
+}
+
+fn part2(data: &String) -> u64 {
+    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data.as_str()).unwrap();
+    let (input, seed_ranges) : (&str, Vec<(u64, u64)>) = separated_list1(space1::<&str, Error<&str>>, separated_pair(nom::character::complete::u64, space1, nom::character::complete::u64))(input).unwrap();
+    let (input, _) = multispace1::<&str, Error<&str>>(input).unwrap();
+    let (_, maps) = process_maps(input).unwrap();
+    dbg!((&seed_ranges).into_iter().map(|(_, b)| b).sum::<u64>());
+    seed_ranges.into_iter().map(|(start, range)| { dbg!(start); (start..start+range).into_par_iter().map(|y| seed_locations(y, &maps)).min().unwrap()}).min().unwrap()
+}

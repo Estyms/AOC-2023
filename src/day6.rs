@@ -17,11 +17,14 @@ struct Race {
     record: u64
 }
 
-fn num_of_records(race: &Race) -> u64 {
-    let range = 1..race.time;
-    range.map(|time_pressed| {
-        (race.time - time_pressed) * time_pressed
-    }).filter(|d| *d > race.record).count() as u64
+impl Race {
+    fn num_of_records(&self) -> u64 {
+        let range = 1..self.time;
+        range.map(|time_pressed| {
+            (self.time - time_pressed) * time_pressed
+        }).filter(|d| *d > self.record).count() as u64
+    }
+
 }
 
 fn parse_data(input: &str) -> (Vec<u64>, Vec<u64>) {
@@ -32,8 +35,7 @@ fn parse_data(input: &str) -> (Vec<u64>, Vec<u64>) {
 
 fn part1(data: &String) -> u64 {
     let (times, distances) = parse_data(data.as_str());
-    let races = zip(times, distances).map(|(time, record)| {Race {time, record}}).collect::<Vec<Race>>();
-    races.iter().map(num_of_records).product()
+    zip(times, distances).map(|(time, record)| {Race {time, record}.num_of_records()}).product()
 }
 
 fn part2(data: &String) -> u64 {
@@ -42,9 +44,9 @@ fn part2(data: &String) -> u64 {
         (format!("{}{}", ts, t),
             format!("{}{}", ds, d))
     });
-    let race = Race {
+
+    Race {
         time: race_data.0.parse().unwrap(),
         record: race_data.1.parse().unwrap()
-    };
-    num_of_records(&race)
+    }.num_of_records()
 }

@@ -1,10 +1,10 @@
 pub fn run(data: String) {
-    println!("Part 1 : {:?}", part1());
-    println!("Part 2 : {:?}", part2());
+    println!("Part 1 : {:?}", part1(&data));
+    println!("Part 2 : {:?}", part2(&data));
 }
 
-fn part1() {
+fn part1(data: &String) {
 }
 
-fn part2() {
+fn part2(data: &String) {
 }

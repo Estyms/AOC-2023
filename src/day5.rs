@@ -19,13 +19,11 @@ struct Data {
 }
 
 #[derive(Debug)]
-struct Map<'a> {
-    source: &'a str,
-    destination: &'a str,
+struct Map {
     data: Vec<Data>
 }
 
-impl Map<'_> {
+impl Map {
     fn find_dest_number(&self, src: u64) -> u64 {
         let x = self.data.iter().filter(|d| {
             src >= d.start_source && src < (d.start_source + d.range)
@@ -44,24 +42,20 @@ fn process_data(input: &str) -> IResult<&str, Data> {
 }
 
 fn process_map(input: &str) -> IResult<&str, Map> {
-    let (input, source) : (&str, &str) = alpha1::<&str, Error<&str>>(input).unwrap();
+    let (input, _) : (&str, &str) = alpha1::<&str, Error<&str>>(input).unwrap();
     let (input, _) = tag::<&str, &str, Error<&str>>("-to-")(input).unwrap();
-    let (input, destination) = terminated(alpha1::<&str, Error<&str>>, tuple((space1, tag("map:"), newline)))(input).unwrap();
+    let (input, _) = terminated(alpha1::<&str, Error<&str>>, tuple((space1, tag("map:"), newline)))(input).unwrap();
     let res = take_until::<&str, &str, Error<&str>>("\n\n")(&input);
 
     if let Ok ((input , numbers)) = res {
         let (_, data) = separated_list1(newline, process_data)(numbers).unwrap();
         Ok((input, Map {
-            source,
-            destination,
-            data,
+            data
         }))
     } else {
         let (_, data) = separated_list1(newline, process_data)(input).unwrap();
         Ok((input, Map {
-            source,
-            destination,
-            data,
+            data
         }))
     }
 
@@ -82,9 +76,6 @@ fn seed_locations(seed: u64, maps: &Vec<Map>) -> u64 {
     number
 }
 
-fn reverse_seed_locations(map: Map, seeds: Vec<u64>) -> Vec<u64> {
-    seeds.into_iter().map(|x| map.find_dest_number(x)).collect()
-}
 
 fn part1(data: &String) -> u64 {
     let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data.as_str()).unwrap();

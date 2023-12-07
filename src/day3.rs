@@ -23,13 +23,13 @@ struct Symbol {
 
 fn process_part_1(input: &str, row: usize) -> (Vec<Number>, Vec<Symbol>) {
     let number_regex = Regex::new(r"[0-9]+").unwrap();
-    let x : Vec<Number> = number_regex.captures_iter(&input).map(|c| {
+    let x : Vec<Number> = number_regex.captures_iter(input).map(|c| {
         let capture = c.get(0).unwrap();
         Number { x: capture.start() as i64,y: row as i64, length : capture.len() as i64, value: capture.as_str().parse().unwrap()}
     }).collect();
 
     let symbol_regex = Regex::new(r"(?m)[^\d.\n]").unwrap();
-    let y : Vec<Symbol> = symbol_regex.captures_iter(&input).map(|c| {
+    let y : Vec<Symbol> = symbol_regex.captures_iter(input).map(|c| {
         let capture = c.get(0).unwrap();
         Symbol {x: capture.start() as i64, y: row as i64}
     }).collect();
@@ -37,7 +37,7 @@ fn process_part_1(input: &str, row: usize) -> (Vec<Number>, Vec<Symbol>) {
     (x, y)
 }
 
-fn is_adjacent_to_symbol(number: &Number, symbols: &Vec<Symbol>) -> bool {
+fn is_adjacent_to_symbol(number: &Number, symbols: &[Symbol]) -> bool {
     symbols.iter().rfold(false, |res, s| {
         res | (
                     s.x <= (number.x + number.length)
@@ -50,9 +50,9 @@ fn is_adjacent_to_symbol(number: &Number, symbols: &Vec<Symbol>) -> bool {
 
 fn get_numbers_and_symbols(input: &str) -> (Vec<Number>, Vec<Symbol>) {
     let mut i : usize = 0;
-    let x: Vec<(Vec<Number>, Vec<Symbol>)> = input.split("\n").map(|x| {i+=1; process_part_1(x, i-1)}).collect();
+    let x: Vec<(Vec<Number>, Vec<Symbol>)> = input.split('\n').map(|x| {i+=1; process_part_1(x, i-1)}).collect();
     x.into_iter().rfold(( vec![], vec![]), |(ln,ls), (n, s)| {
-        (vec![ln, n].concat(), vec![ls, s].concat())
+        ([ln, n].concat(), [ls, s].concat())
     })
 }
 
@@ -62,7 +62,7 @@ fn part1(input: &String) -> u64 {
 }
 
 
-fn process_symbols<'a>(number: &Number, symbols: &Vec<Symbol>, hashmap: &'a mut HashMap<(i64, i64), Vec<Number>>) {
+fn process_symbols(number: &Number, symbols: &[Symbol], hashmap: & mut HashMap<(i64, i64), Vec<Number>>) {
     let symbol = symbols.iter().find(|s| {
 
             s.x <= (number.x + number.length)
@@ -89,5 +89,5 @@ fn part2(input: &String) -> u64 {
     let (numbers, symbols) = get_numbers_and_symbols(input);
     let mut map: HashMap<(i64, i64), Vec< Number >> = HashMap::new();
     numbers.into_iter().for_each(|num| {process_symbols(&num, &symbols, &mut map)});
-    map.iter().filter(|(_, val)| val.len() == 2).map(|p| p.1.into_iter().map(|p| p.value).product::<u64>()).sum()
+    map.iter().filter(|(_, val)| val.len() == 2).map(|p| p.1.iter().map(|p| p.value).product::<u64>()).sum()
 }

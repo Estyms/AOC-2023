@@ -80,7 +80,7 @@ fn process_part_1(input: &str) -> (u64, bool) {
 }
 
 fn part1(data: &String) -> u64 {
-    let lines: Vec<(u64, bool)> = data.split("\n").map(|f| process_part_1(f)).collect();
+    let lines: Vec<(u64, bool)> = data.split('\n').map(process_part_1).collect();
     lines.iter().filter(|(_, x)| *x).map(|(id, _)| id).sum()
 }
 
@@ -117,5 +117,5 @@ fn process_part_2(input: &str) -> u64 {
 }
 
 fn part2(data: &String) -> u64 {
-    data.split("\n").map(|f| process_part_2(f)).sum()
+    data.split('\n').map(process_part_2).sum()
 }

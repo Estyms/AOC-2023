@@ -69,7 +69,7 @@ fn game_loop(card_map: &mut HashMap<u64, u64>, cards: Vec<Card>) -> u64 {
             }
         } );
     }
-    final_card_map.iter().map(|(_, number)| number).sum()
+    final_card_map.values().sum()
 }
 
 

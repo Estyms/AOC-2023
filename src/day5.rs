@@ -43,7 +43,7 @@ fn process_data(input: &str) -> IResult<&str, Data> {
     Ok((
         input,
         Data {
-            start_destination: *numbers.get(0).unwrap(),
+            start_destination: *numbers.first().unwrap(),
             start_source: *numbers.get(1).unwrap(),
             range: *numbers.get(2).unwrap(),
         },
@@ -58,7 +58,7 @@ fn process_map(input: &str) -> IResult<&str, Map> {
         tuple((space1, tag("map:"), newline)),
     )(input)
     .unwrap();
-    let res = take_until::<&str, &str, Error<&str>>("\n\n")(&input);
+    let res = take_until::<&str, &str, Error<&str>>("\n\n")(input);
 
     if let Ok((input, numbers)) = res {
         let (_, data) = separated_list1(newline, process_data)(numbers).unwrap();

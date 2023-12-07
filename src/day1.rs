@@ -47,8 +47,7 @@ fn get_first_digit_part2(input: &str) -> u32 {
             })
         }}
     );
-    let res = format!("{}{}", digits.first().unwrap(), digits.last().unwrap()).parse::<u32>().unwrap();
-    res
+    format!("{}{}", digits.first().unwrap(), digits.last().unwrap()).parse::<u32>().unwrap()
 }
 
 

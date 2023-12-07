@@ -1,4 +1,5 @@
 use std::iter::zip;
+use rayon::prelude::*;
 use nom::bytes::complete::tag;
 use nom::character::complete;
 use nom::character::complete::{multispace1, space1};
@@ -20,9 +21,9 @@ struct Race {
 impl Race {
     fn num_of_records(&self) -> u64 {
         let range = 1..self.time;
-        range.map(|time_pressed| {
-            (self.time - time_pressed) * time_pressed
-        }).filter(|d| *d > self.record).count() as u64
+        range.into_par_iter().filter(|time_pressed| {
+            (self.time - time_pressed) * time_pressed > self.record
+        }).count() as u64
     }
 
 }
@@ -39,6 +40,7 @@ fn part1(data: &String) -> u64 {
 }
 
 fn part2(data: &String) -> u64 {
+
     let (times, distances) = parse_data(data.as_str());
     let race_data = zip(times, distances).fold((String::from(""), String::from("")), |(ts, ds), (t, d)| {
         (format!("{}{}", ts, t),

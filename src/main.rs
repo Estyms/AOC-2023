@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 use std::fs;
 use inquire::Text;
@@ -29,7 +30,7 @@ fn main() {
 
 type DayFn = Box<dyn Fn(String)>;
 fn run_day(day: i32) {
-    let map : [(i32, DayFn); 8] = [
+    let map : [(i32, DayFn); 9] = [
         (1, Box::from(day1::run)),
         (2, Box::from(day2::run)),
         (3, Box::from(day3::run)),
@@ -37,7 +38,8 @@ fn run_day(day: i32) {
         (5, Box::from(day5::run)),
         (6, Box::from(day6::run)),
         (7, Box::from(day7::run)),
-        (8, Box::from(day8::run))
+        (8, Box::from(day8::run)),
+        (9, Box::from(day9::run))
     ];
 
     let data = fs::read_to_string(format!("inputs/day{}.txt", day).as_str()).expect("Can't find that day input file");

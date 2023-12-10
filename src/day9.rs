@@ -15,11 +15,9 @@ fn get_reduction(list: &[i32]) -> Vec<i32> {
 
 fn get_reduction_list(mut prec: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     if prec.last().unwrap().iter().sum::<i32>() == 0 {
-        return prec.clone()
+        return prec
     }
-
-    let new_lst = get_reduction(prec.last().unwrap());
-    prec.push(new_lst);
+    prec.push(get_reduction(prec.last().unwrap()));
     get_reduction_list(prec)
 }
 
@@ -32,8 +30,7 @@ fn process_part_1(list: &[Vec<i32>]) -> i32 {
 }
 
 fn process_list(input: &str) ->  Vec<Vec<i32>> {
-    let (_, list) : (&str, Vec<Vec<i32>>) = separated_list1(tag::<&str, &str, Error<&str>>("\n"), separated_list1(tag(" "), nom::character::complete::i32))(input).unwrap();
-    list
+    separated_list1(tag::<&str, &str, Error<&str>>("\n"), separated_list1(tag(" "), nom::character::complete::i32))(input).unwrap().1
 }
 
 fn part1(data: &String) -> i32 {

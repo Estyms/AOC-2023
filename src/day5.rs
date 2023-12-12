@@ -74,7 +74,7 @@ fn process_maps(input: &str) -> IResult<&str, Vec<Map>> {
     Ok((input, maps))
 }
 
-fn seed_locations(seed: u64, maps: &Vec<Map>) -> u64 {
+fn seed_locations(seed: u64, maps: &[Map]) -> u64 {
     maps.iter().fold(seed, |num, m| m.find_dest_number(num))
 }
 

@@ -58,12 +58,12 @@ fn calculate_paths(galaxies: Vec<Galaxy>) -> Vec<i64> {
     }).collect()
 }
 
-fn part1(data: &String) -> i64 {
-    let galaxies = process_galaxies(data.as_str(), 2);
+fn part1(data: &str) -> i64 {
+    let galaxies = process_galaxies(data, 2);
     calculate_paths(galaxies).iter().sum()
 }
 
-fn part2(data: &String) -> i64 {
-    let galaxies = process_galaxies(data.as_str(), 1_000_000);
+fn part2(data: &str) -> i64 {
+    let galaxies = process_galaxies(data, 1_000_000);
     calculate_paths(galaxies).iter().sum()
 }

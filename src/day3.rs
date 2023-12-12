@@ -56,7 +56,7 @@ fn get_numbers_and_symbols(input: &str) -> (Vec<Number>, Vec<Symbol>) {
     })
 }
 
-fn part1(input: &String) -> u64 {
+fn part1(input: &str) -> u64 {
     let (numbers, symbols) = get_numbers_and_symbols(input);
     numbers.into_iter().filter(|num| is_adjacent_to_symbol(num, &symbols)).map(|num| num.value).sum()
 }
@@ -85,7 +85,7 @@ fn process_symbols(number: &Number, symbols: &[Symbol], hashmap: & mut HashMap<(
     }
 }
 
-fn part2(input: &String) -> u64 {
+fn part2(input: &str) -> u64 {
     let (numbers, symbols) = get_numbers_and_symbols(input);
     let mut map: HashMap<(i64, i64), Vec< Number >> = HashMap::new();
     numbers.into_iter().for_each(|num| {process_symbols(&num, &symbols, &mut map)});

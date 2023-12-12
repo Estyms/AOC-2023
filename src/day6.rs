@@ -34,14 +34,14 @@ fn parse_data(input: &str) -> (Vec<u64>, Vec<u64>) {
     (times, distances)
 }
 
-fn part1(data: &String) -> u64 {
-    let (times, distances) = parse_data(data.as_str());
+fn part1(data: &str) -> u64 {
+    let (times, distances) = parse_data(data);
     zip(times, distances).map(|(time, record)| {Race {time, record}.num_of_records()}).product()
 }
 
-fn part2(data: &String) -> u64 {
+fn part2(data: &str) -> u64 {
 
-    let (times, distances) = parse_data(data.as_str());
+    let (times, distances) = parse_data(data);
     let race_data = zip(times, distances).fold((String::from(""), String::from("")), |(ts, ds), (t, d)| {
         (format!("{}{}", ts, t),
             format!("{}{}", ds, d))

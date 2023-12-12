@@ -44,8 +44,8 @@ fn process_part_1(directions: &str, map: HashMap<&str, (&str, &str)>) -> usize {
     0
 }
 
-fn part1(data: &String) -> usize {
-    let (input, directions) = terminated(alphanumeric1::<&str, Error<&str>>, tag("\n\n"))(data.as_str()).unwrap();
+fn part1(data: &str) -> usize {
+    let (input, directions) = terminated(alphanumeric1::<&str, Error<&str>>, tag("\n\n"))(data).unwrap();
     let (_, map) = parse_map(input).unwrap();
     process_part_1(directions, map)
 }
@@ -73,8 +73,8 @@ fn process_part_2(directions: &str, map: HashMap<&str, (&str, &str)>) -> u64 {
     })
 }
 
-fn part2(data: &String) -> u64 {
-    let (input, directions) = terminated(alphanumeric1::<&str, Error<&str>>, tag("\n\n"))(data.as_str()).unwrap();
+fn part2(data: &str) -> u64 {
+    let (input, directions) = terminated(alphanumeric1::<&str, Error<&str>>, tag("\n\n"))(data).unwrap();
     let (_, map) = parse_map(input).unwrap();
 
     process_part_2(directions, map)

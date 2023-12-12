@@ -78,8 +78,8 @@ fn seed_locations(seed: u64, maps: &Vec<Map>) -> u64 {
     maps.iter().fold(seed, |num, m| m.find_dest_number(num))
 }
 
-fn part1(data: &String) -> u64 {
-    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data.as_str()).unwrap();
+fn part1(data: &str) -> u64 {
+    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data).unwrap();
     let (input, seeds): (&str, Vec<u64>) =
         separated_list1(space1::<&str, Error<&str>>, nom::character::complete::u64)(input).unwrap();
     let (input, _) = multispace1::<&str, Error<&str>>(input).unwrap();
@@ -93,8 +93,8 @@ fn part1(data: &String) -> u64 {
         .unwrap()
 }
 
-fn part2(data: &String) -> u64 {
-    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data.as_str()).unwrap();
+fn part2(data: &str) -> u64 {
+    let (input, _) = tag::<&str, &str, Error<&str>>("seeds: ")(data).unwrap();
     let (input, seed_ranges): (&str, Vec<(u64, u64)>) = separated_list1(
         space1::<&str, Error<&str>>,
         separated_pair(

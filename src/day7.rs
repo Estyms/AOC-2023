@@ -180,15 +180,15 @@ fn process_hands(input: &str) -> Vec<(&str, u64)> {
     hands
 }
 
-fn part1(data: &String) -> u64 {
-    let hands = process_hands(data.as_str());
+fn part1(data: &str) -> u64 {
+    let hands = process_hands(data);
     let mut hands: Vec<Hand> = hands.iter().map(|h| Hand::new_p1(h.0, h.1)).collect();
     hands.sort();
     hands.iter().enumerate().map(|(i, h)| ((i + 1) as u64) * h.score).sum()
 }
 
-fn part2(data: &String) -> u64 {
-    let hands = process_hands(data.as_str());
+fn part2(data: &str) -> u64 {
+    let hands = process_hands(data);
     let mut hands: Vec<Hand> = hands.iter().map(|h| Hand::new_p2(h.0, h.1)).collect();
     hands.sort();
     hands.iter().enumerate().map(|(i, h)| ((i + 1) as u64) * h.score).sum()

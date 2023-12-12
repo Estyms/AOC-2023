@@ -21,7 +21,7 @@ fn process_part_1(input: &str) -> IResult<&str, u32> {
     Ok((input, get_first_digit_part1(processed.as_str())))
 }
 
-fn part1(data: &String) -> u32 {
+fn part1(data: &str) -> u32 {
     let (_, nums) = separated_list1(tag("\n"), process_part_1)(data).unwrap();
     nums.iter().sum()
 }
@@ -58,7 +58,7 @@ fn process_part_2(input: &str) -> IResult<&str, u32> {
     Ok((input, get_first_digit_part2(processed.as_str())))
 }
 
-fn part2(data: &String) -> u32 {
+fn part2(data: &str) -> u32 {
     let (_, nums) = separated_list1(tag("\n"), process_part_2)(data).unwrap();
     nums.iter().sum()
 }

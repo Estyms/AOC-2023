@@ -33,8 +33,8 @@ fn process_list(input: &str) ->  Vec<Vec<i32>> {
     separated_list1(tag::<&str, &str, Error<&str>>("\n"), separated_list1(tag(" "), nom::character::complete::i32))(input).unwrap().1
 }
 
-fn part1(data: &String) -> i32 {
-    process_part_1(&process_list(data.as_str()))
+fn part1(data: &str) -> i32 {
+    process_part_1(&process_list(data))
 }
 
 
@@ -46,6 +46,6 @@ fn process_part_2(list: &[Vec<i32>]) -> i32 {
     }).collect::<Vec<i32>>().iter().sum()
 }
 
-fn part2(data: &String) -> i32 {
-    process_part_2(&process_list(data.as_str()))
+fn part2(data: &str) -> i32 {
+    process_part_2(&process_list(data))
 }

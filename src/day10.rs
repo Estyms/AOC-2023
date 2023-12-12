@@ -146,8 +146,8 @@ fn find_loop(maze: &Maze) -> Vec<Tile> {
     recursive_travel(start, maze, &mut vec).unwrap()
 }
 
-fn part1(data: &String) -> usize {
-    let maze = parse_map(data.as_str());
+fn part1(data: &str) -> usize {
+    let maze = parse_map(data);
     let maze_loop = find_loop(&maze);
     ((maze_loop.len()-1) / 2) + 1
 }
@@ -189,8 +189,8 @@ fn replace_start_tile(maze_loop: &[Tile]) -> TileType {
     }
 }
 
-fn part2(data: &String) -> usize {
-    let maze = parse_map(data.as_str());
+fn part2(data: &str) -> usize {
+    let maze = parse_map(data);
     let mut maze_loop = find_loop(&maze);
     maze_loop.get_mut(0).unwrap().tile = replace_start_tile(&maze_loop);
     maze.values().collect::<Vec<&Tile>>().into_par_iter().map(|t| (t, axis_crossing(*t, &maze_loop))).filter(|a| a.1).collect::<Vec<_>>().len()

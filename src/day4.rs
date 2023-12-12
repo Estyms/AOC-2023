@@ -37,7 +37,7 @@ fn card_processing(input : &str) -> IResult<&str, Card> {
     Ok((input, Card {id, win_numbers, elf_numbers}))
 }
 
-fn part1(input: &String) -> u64 {
+fn part1(input: &str) -> u64 {
     let (_, cards) = separated_list1(tag("\n"), card_processing)(input).unwrap();
     cards.iter().map(|c| match c.count_winning_numbers() {
         0 => 0,
@@ -73,7 +73,7 @@ fn game_loop(card_map: &mut HashMap<u64, u64>, cards: Vec<Card>) -> u64 {
 }
 
 
-fn part2(input: &String) -> u64 {
+fn part2(input: &str) -> u64 {
     let (_, cards) = separated_list1(tag("\n"), card_processing)(input).unwrap();
     let mut card_map : HashMap<u64, u64> = HashMap::new();
     cards.iter().for_each(|x| {card_map.insert(x.id, 1);});
